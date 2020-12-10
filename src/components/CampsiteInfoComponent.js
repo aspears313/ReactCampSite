@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardImg, CardText, CardBody, Breadcrumb, BreadcrumbItem, Button, Modal, ModalHeader, ModalBody, Label } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
 
 const minLength = len => val => val && (val.length >= len);
 const maxLength = len => val => !val || (val.length <= len);
@@ -47,6 +48,8 @@ function RenderComments({comments, addComment, campsiteId}) {
 }
 
 
+
+
 class CommentForm extends Component {
 
     constructor(props) {
@@ -85,11 +88,11 @@ class CommentForm extends Component {
                         <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
                             <div className="form-group">
                                 <Label htmlFor="rating">Rating</Label>
-                                <Control.select 
-                                className="form-control" 
+                                <Control.select
                                 model=".rating"
                                 id="rating"
-                                name="rating"
+                                name="rating" 
+                                className="form-control"
                                 >
                                     <option>1</option>
                                     <option>2</option>
@@ -101,35 +104,35 @@ class CommentForm extends Component {
                             <div className="form-group">
                                 <Label htmlFor="author">Your Name</Label>
                                 <Control.text
-                                    className="form-control"
                                     model=".author"
                                     id="author"
-                                    placeholder="Your Name"
                                     name="author"
+                                    placeholder="Your Name"
+                                    className="form-control"
                                     validators={{
                                         minLength: minLength(2),
                                         maxLength: maxLength(15)
                                     }}
                                 />
                                 <Errors 
-                                className="text-danger"
-                                model=".author"
-                                show="touched"
-                                component="div"
-                                messages={{
-                                    minLength: 'Must be at least 2 characters',
-                                    maxLength: 'Must be 15 characters or less'
-                                }}
+                                    className="text-danger"
+                                    model=".author"
+                                    show="touched"
+                                    component="div"
+                                    messages={{
+                                        minLength: 'Must be at least 2 characters',
+                                        maxLength: 'Must be 15 characters or less'
+                                    }}
                                 />
                             </div>
                             <div className="form-group">
                                 <Label htmlFor="text">Comment</Label>
                                 <Control.textarea 
-                                className="form-control" 
                                 model=".text"
                                 id="text"
-                                rows="6"
                                 name="text"
+                                rows="6"
+                                className="form-control"
                                 />
                             </div>
                             <Button type="submit" color="primary">
@@ -141,12 +144,29 @@ class CommentForm extends Component {
             </div>
         );
     }
-  }
-
-
-
+}
 
 function CampsiteInfo(props) {
+    if (props.isLoading) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
+    if (props.errMess) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <div className="col">
+                        <h4>{props.errMess}</h4>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     if (props.campsite) {
         return (
             <div className="container">
